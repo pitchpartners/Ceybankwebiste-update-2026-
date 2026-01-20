@@ -1,0 +1,19 @@
+{
+    "name": "@repo/auth",
+    "version": "0.0.0",
+    "scripts": {
+        "generate":"pnpm dlx @better-auth/cli@latest generate --config src/auth.ts --output ../database/prisma/schema.prisma",
+        "create-admin": "tsx scripts/create-admin.ts"
+    },
+    "dependencies": {
+        "better-auth": "^1.4.6",
+        "@repo/database": "workspace:*"
+    },
+    "devDependencies": {
+        "dotenv": "^17.2.3",
+        "tsx": "^4.21.0"
+    },
+    "exports":{
+        ".": "./src/auth.ts"
+    }
+}

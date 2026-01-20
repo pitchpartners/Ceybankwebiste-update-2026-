@@ -1,0 +1,124 @@
+# Privacy Policy
+
+**Last updated:** 06 January 2026
+
+This Privacy Policy describes how **CEYBANK** ("we", "our", or "us") collects, uses, discloses, and protects your personal data in accordance with the **Personal Data Protection Act, No. 9 of 2022 of Sri Lanka (PDPA)** when you access or use our business website **[www.ceybank.com](http://www.ceybank.com)** (the "Site"). By using this Site, you agree to the practices described in this Privacy Policy.
+
+---
+
+## 1. Information We Collect
+
+We may collect and process the following categories of personal data:
+
+### a. Personal Data You Provide
+
+* Name
+* Email address
+* Phone number
+* Information submitted through contact forms
+* Information provided when subscribing to newsletters or marketing communications
+
+### b. Automatically Collected Data
+
+* IP address
+* Browser type and device information
+* Pages visited, referring URLs, and usage statistics
+* Date and time of access
+
+### c. Cookies and Analytics Technologies
+
+We use cookies and third-party analytics tools such as **Google Analytics** and **Facebook Pixel** to understand website usage, improve performance, and support marketing activities. You may disable cookies through your browser settings; however, some website features may not function properly.
+
+---
+
+## 2. Purpose of Processing
+
+Your personal data is collected and processed for lawful purposes under the Sri Lanka PDPA, including:
+
+* Operating and managing the CEYBANK business website
+* Responding to inquiries submitted via contact forms
+* Sending newsletters and marketing communications (where consent is provided)
+* Improving website content, functionality, and user experience
+* Monitoring and analyzing website usage and trends
+* Ensuring website security and preventing unauthorized access
+* Complying with legal and regulatory obligations
+
+---
+
+## 3. Lawful Basis for Processing
+
+We process personal data based on one or more of the following lawful grounds:
+
+* Your consent
+* Performance of a contract or service request
+* Compliance with legal obligations
+* Legitimate interests, where applicable and not overridden by your rights
+
+---
+
+## 4. Disclosure of Personal Data
+
+CEYBANK does not sell or rent personal data. We may disclose personal data only in the following circumstances:
+
+* To trusted service providers such as website hosting, analytics, and email communication providers, who process data on our behalf
+* When required by applicable laws, regulations, or legal processes
+* To protect the rights, security, and property of CEYBANK and its users
+
+---
+
+## 5. Data Retention
+
+Personal data will be retained only for as long as necessary to fulfill the purposes outlined in this policy or as required by applicable law.
+
+---
+
+## 6. Data Security
+
+We implement appropriate technical and organizational measures to safeguard personal data against unauthorized access, loss, misuse, or alteration. However, no online system is completely secure.
+
+---
+
+## 7. Your Rights Under Sri Lanka PDPA
+
+You have the right to:
+
+* Request access to your personal data
+* Request correction of inaccurate or incomplete data
+* Withdraw consent at any time (where processing is based on consent)
+* Object to certain processing activities
+* Request deletion of personal data, subject to legal requirements
+
+Requests can be made using the contact details below.
+
+---
+
+## 8. Cross-Border Data Transfers
+
+While CEYBANK primarily operates in Sri Lanka, some service providers (such as analytics or email platforms) may process data outside Sri Lanka. Where such transfers occur, we ensure appropriate safeguards are in place in compliance with the Sri Lanka PDPA to protect your personal data.
+
+---
+
+## 9. Children’s Data
+
+This website is not intended for children under 18 years of age. We do not knowingly collect personal data from children.
+
+---
+
+## 10. Changes to This Privacy Policy
+
+CEYBANK may update this Privacy Policy from time to time. Updates will be posted on this page with a revised effective date.
+
+---
+
+## 11. Contact Information
+
+If you have questions, requests, or concerns regarding this Privacy Policy or your personal data, please contact:
+
+**CEYBANK**
+Email: **[customercare@ceybank.com](mailto:customercare@ceybank.com)**
+Website: **[www.ceybank.com](http://www.ceybank.com)**
+Address: **85, York Street, Colombo 01, Sri Lanka**
+
+---
+
+*This Privacy Policy is prepared to align with the Sri Lanka Personal Data Protection Act (PDPA) and considers international users where applicable. It is provided for general informational purposes and does not constitute legal advice.*

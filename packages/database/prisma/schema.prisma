@@ -1,0 +1,284 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//User Schema
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+model Jwks {
+  id         String   @id
+  publicKey  String
+  privateKey String
+  createdAt  DateTime
+
+  @@map("jwks")
+}
+
+//Funds Schema
+
+enum FundCategory {
+  MONEY_MARKET
+  EQUITY
+}
+
+model Fund {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  code      String   @unique
+  name      String
+  category  FundCategory
+  riskLevel String
+  shortDescription String?
+  longDescription  String?
+  order            Int      @default(0)
+  isActive  Boolean  @default(true)
+
+  moneyMarketSnapshots MoneyMarketMonthlySnapshot[]
+  equitySnapshots      EquityMonthlySnapshot[]
+  prices               FundPrice[]
+  reports              FundReport[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactSettings {
+  id                 Int      @id @default(1)
+  mainEmail          String
+  mainPhone          String
+  officeAddress      String
+  facebookUrl        String?
+  linkedinUrl        String?
+  twitterUrl         String?
+  instagramUrl       String?
+  youtubeUrl         String?
+  googleMapsEmbedUrl String?
+  updatedAt          DateTime @updatedAt
+  createdAt          DateTime @default(now())
+}
+
+model FundPrice {
+  id         Int      @id @default(autoincrement())
+  fundId     String
+  bidPrice   Decimal  @db.Decimal(10, 4)
+  offerPrice Decimal  @db.Decimal(10, 4)
+  date       DateTime
+
+  fund Fund @relation(fields: [fundId], references: [id])
+
+  @@unique([fundId, date])
+}
+
+enum FundReportType {
+  ANNUAL
+  INTERIM
+}
+
+model FundReport {
+  id            String          @id @default(cuid())
+  fundId        String
+  fund          Fund            @relation(fields: [fundId], references: [id])
+  title         String
+  year          Int
+  periodLabel   String?
+  type          FundReportType
+  filePath      String
+  fileSizeBytes Int?
+  mimeType      String?
+  publishedAt   DateTime?
+  isActive      Boolean         @default(true)
+  order         Int             @default(0)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model MoneyMarketMonthlySnapshot {
+  id                     String   @id @default(cuid())
+  fundId                 String
+  fund                   Fund     @relation(fields: [fundId], references: [id])
+  asOfDate               DateTime
+  commentary             String
+  ytdReturn              Decimal  @db.Decimal(10, 4)
+  oneMonthAnn            Decimal  @db.Decimal(10, 4)
+  threeMonthAnn          Decimal  @db.Decimal(10, 4)
+  currentYield           Decimal  @db.Decimal(10, 4)
+  weightedMaturityMonths Decimal  @db.Decimal(10, 4)
+  weightedRating         String
+  fundSizeMillions       Decimal  @db.Decimal(14, 2)
+  unitPrice              Decimal  @db.Decimal(12, 4)
+  unitHolders            Int
+  creditProfileJson      Json
+  assetAllocationJson    Json
+  createdAt              DateTime @default(now())
+
+  @@index([fundId, asOfDate])
+  @@unique([fundId, asOfDate])
+}
+
+model EquityMonthlySnapshot {
+  id                   String   @id @default(cuid())
+  fundId               String
+  fund                 Fund     @relation(fields: [fundId], references: [id])
+  asOfDate             DateTime
+  ytdCY                Decimal  @db.Decimal(10, 4)
+  ytdFY                Decimal? @db.Decimal(10, 4)
+  threeMonths          Decimal  @db.Decimal(10, 4)
+  sixMonths            Decimal  @db.Decimal(10, 4)
+  oneYear              Decimal  @db.Decimal(10, 4)
+  threeYears           Decimal  @db.Decimal(10, 4)
+  fiveYears            Decimal  @db.Decimal(10, 4)
+  tenYears             Decimal  @db.Decimal(10, 4)
+  fifteenYears         Decimal  @db.Decimal(10, 4)
+  twentyYears          Decimal  @db.Decimal(10, 4)
+  cvFund               Decimal  @db.Decimal(10, 4)
+  cvMarket             Decimal  @db.Decimal(10, 4)
+  beta                 Decimal  @db.Decimal(10, 4)
+  rSq                  Decimal  @db.Decimal(10, 4)
+  navMillions          Decimal  @db.Decimal(14, 2)
+  sectorAllocationJson Json
+  topHoldingsJson      Json
+  createdAt            DateTime @default(now())
+
+  @@index([fundId, asOfDate])
+  @@unique([fundId, asOfDate])
+}
+
+// Team Members
+model TeamMember {
+  id               Int      @id @default(autoincrement())
+  name             String
+  position         String
+  shortTitle       String?
+  bio              String
+  category         String   @default("board")
+  order            Int      @default(0)
+  location         String?
+  isSupportContact Boolean  @default(false)
+  supportPhone     String?
+  supportOrder     Int      @default(0)
+  isActive         Boolean  @default(true)
+  profileImagePath String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model NewsPost {
+  id             String      @id @default(cuid())
+  slug           String      @unique
+  title          String
+  excerpt        String
+  content        String
+  publishedAt    DateTime
+  isActive       Boolean     @default(true)
+  order          Int         @default(0)
+  coverImagePath String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  images         NewsImage[]
+
+  @@index([publishedAt])
+  @@index([isActive])
+  @@index([slug])
+}
+
+model NewsImage {
+  id         String   @id @default(cuid())
+  newsPostId String
+  imagePath  String
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  newsPost NewsPost @relation(fields: [newsPostId], references: [id])
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model Branch {
+  id             Int      @id @default(autoincrement())
+  name           String
+  city           String?
+  primaryPhone   String
+  secondaryPhone String?
+  email          String?
+  order          Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
