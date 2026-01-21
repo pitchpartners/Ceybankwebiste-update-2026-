@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { UploadService } from '../upload/upload.service';
 import { Prisma } from '@repo/database';
@@ -166,9 +167,11 @@ export class NewsService {
     coverImage?: Express.Multer.File,
     galleryFiles?: Express.Multer.File[],
   ) {
+    const slug = await this.generateUniqueSlug(dto.title, dto.slug);
+
     const data: Prisma.NewsPostCreateInput = {
       title: dto.title,
-      slug: dto.slug,
+      slug,
       excerpt: dto.excerpt,
       content: dto.content,
       publishedAt: new Date(dto.publishedAt),
@@ -249,7 +252,13 @@ export class NewsService {
 
     const data: Prisma.NewsPostUpdateInput = {};
     if (dto.title !== undefined) data.title = dto.title;
-    if (dto.slug !== undefined) data.slug = dto.slug;
+    if (dto.slug !== undefined) {
+      data.slug = await this.generateUniqueSlug(
+        dto.title ?? existing.title,
+        dto.slug,
+        id,
+      );
+    }
     if (dto.excerpt !== undefined) data.excerpt = dto.excerpt;
     if (dto.content !== undefined) data.content = dto.content;
     if (dto.publishedAt !== undefined) {
@@ -417,6 +426,43 @@ export class NewsService {
     await this.uploadService.removeNewsDirectory(id);
 
     return { success: true };
+  }
+
+  private slugify(value: string) {
+    return value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  private async generateUniqueSlug(
+    title: string,
+    providedSlug?: string,
+    excludeId?: string,
+  ): Promise<string> {
+    const baseInput = providedSlug || title || 'news';
+    const base = this.slugify(baseInput) || 'news';
+
+    // Append a short unique suffix to avoid collisions while keeping the slug readable.
+    // Use uuid for uniqueness; take first segment to keep it short.
+    const makeCandidate = () => `${base}-${randomUUID().split('-')[0]}`;
+
+    let candidate = makeCandidate();
+    // Ensure uniqueness, excluding the current record when updating
+    while (
+      await this.prisma.newsPost.findFirst({
+        where: {
+          slug: candidate,
+          ...(excludeId ? { NOT: { id: excludeId } } : {}),
+        },
+        select: { id: true },
+      })
+    ) {
+      candidate = makeCandidate();
+    }
+
+    return candidate;
   }
 
   private ensureImage(file: Express.Multer.File) {

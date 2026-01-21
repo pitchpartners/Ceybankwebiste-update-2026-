@@ -33,7 +33,6 @@ export interface NewsListResponse {
 
 export interface NewsInput {
   title: string;
-  slug: string;
   excerpt: string;
   content: string;
   publishedAt: string;

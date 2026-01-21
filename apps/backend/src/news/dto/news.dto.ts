@@ -1,6 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { Transform, Type } from 'class-transformer';
 import {
+  Allow,
   IsBoolean,
   IsDateString,
   IsIn,
@@ -47,10 +48,10 @@ export class CreateNewsDto {
   title: string;
 
   @Transform(trimString)
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MaxLength(200)
-  slug: string;
+  slug?: string;
 
   @Transform(trimString)
   @IsString()
@@ -76,6 +77,13 @@ export class CreateNewsDto {
   @Type(() => Number)
   @Min(0)
   order?: number;
+
+  // Whitelist file fields so global ValidationPipe doesn't reject multipart keys
+  @Allow()
+  coverImage?: unknown;
+
+  @Allow()
+  gallery?: unknown;
 }
 
 export class UpdateNewsDto extends PartialType(CreateNewsDto) {

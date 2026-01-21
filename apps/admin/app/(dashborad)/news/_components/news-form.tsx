@@ -49,13 +49,6 @@ const formatDateInput = (value?: string) => {
   return date.toISOString().slice(0, 10)
 }
 
-const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-
 const buildInitialGallery = (images?: NewsImage[]): GalleryItem[] => {
   if (!images?.length) return []
   return [...images]
@@ -80,7 +73,6 @@ export function NewsForm({
     resolver: zodResolver(newsSchema),
     defaultValues: {
       title: defaultValues?.title || "",
-      slug: defaultValues?.slug || "",
       excerpt: defaultValues?.excerpt || "",
       content: defaultValues?.content || "",
       publishedAt: formatDateInput(defaultValues?.publishedAt) || "",
@@ -93,15 +85,10 @@ export function NewsForm({
   const [coverPreview, setCoverPreview] = useState<string | null>(initialCoverUrl || null)
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(() => buildInitialGallery(initialGallery))
   const [galleryChanged, setGalleryChanged] = useState(false)
-  const [slugEdited, setSlugEdited] = useState(false)
-
-  const titleValue = form.watch("title")
-  const slugValue = form.watch("slug")
 
   useEffect(() => {
     form.reset({
       title: defaultValues?.title || "",
-      slug: defaultValues?.slug || "",
       excerpt: defaultValues?.excerpt || "",
       content: defaultValues?.content || "",
       publishedAt: formatDateInput(defaultValues?.publishedAt) || "",
@@ -110,22 +97,9 @@ export function NewsForm({
     })
     setGalleryItems(buildInitialGallery(initialGallery))
     setGalleryChanged(false)
-    setSlugEdited(!!defaultValues?.slug)
     setCoverFile(null)
     setCoverPreview(initialCoverUrl || null)
   }, [defaultValues, form, initialCoverUrl, initialGallery])
-
-  useEffect(() => {
-    if (!slugEdited) {
-      form.setValue("slug", slugify(titleValue || ""), { shouldValidate: true })
-    }
-  }, [titleValue, slugEdited, form])
-
-  useEffect(() => {
-    if (!slugValue) {
-      setSlugEdited(false)
-    }
-  }, [slugValue])
 
   const handleCoverChange = (file: File | null) => {
     setCoverFile(file)
@@ -202,41 +176,19 @@ export function NewsForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmitForm)} className="space-y-6">
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input placeholder="News title" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="slug"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Slug</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="auto-generated"
-                    {...field}
-                    onChange={(e) => {
-                      setSlugEdited(true)
-                      field.onChange(e)
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="News title" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <FormField

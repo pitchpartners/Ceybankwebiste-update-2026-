@@ -16,9 +16,15 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  const originsEnv = process.env.CROSS_ORIGIN?.split(',').filter(Boolean);
+  const corsEnv =
+    process.env.CROSS_ORIGINS ?? process.env.CROSS_ORIGIN ?? '';
+  const origins = corsEnv
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   app.enableCors({
-    origin: originsEnv,
+    origin: origins.length ? origins : true,
     credentials: true,
   });
   const expressApp = app.getHttpAdapter().getInstance() as unknown as Express;

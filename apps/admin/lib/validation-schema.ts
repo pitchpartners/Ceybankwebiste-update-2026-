@@ -72,11 +72,14 @@ export const fundReportSchema = z.object({
 })
 
 export const newsSchema = z.object({
-  title: z.string().trim().min(1, "Title is required"),
-  slug: z.string().trim().min(1, "Slug is required"),
-  excerpt: z.string().trim().min(1, "Excerpt is required"),
+  title: z.string().trim().min(1, "Title is required").max(200, "Max 200 characters"),
+  excerpt: z.string().trim().min(1, "Excerpt is required").max(500, "Max 500 characters"),
   content: z.string().trim().min(1, "Content is required"),
-  publishedAt: z.string().trim().min(1, "Published date is required"),
+  publishedAt: z
+    .string()
+    .trim()
+    .min(1, "Published date is required")
+    .refine((value) => !Number.isNaN(Date.parse(value)), "Published date must be valid"),
   order: z.number().int().min(0, "Order must be 0 or greater"),
   isActive: z.boolean(),
 })

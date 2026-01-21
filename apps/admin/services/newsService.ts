@@ -19,7 +19,6 @@ function buildFormData(
 ) {
   const form = new FormData();
   form.append("title", payload.title);
-  form.append("slug", payload.slug);
   form.append("excerpt", payload.excerpt);
   form.append("content", payload.content);
   form.append("publishedAt", toIsoString(payload.publishedAt));
@@ -64,9 +63,7 @@ export async function createNews(payload: NewsInput): Promise<NewsPost> {
     includeExisting: false,
     includeGalleryOrder: false,
   });
-  const res = await api.post<NewsPost>("/admin/news", form, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const res = await api.post<NewsPost>("/admin/news", form);
   return res.data;
 }
 
@@ -85,9 +82,7 @@ export async function updateNews(
 
   if (hasCover || hasGallery || galleryChanged) {
     const form = buildFormData(payload);
-    const res = await api.patch<NewsPost>(`/admin/news/${id}`, form, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const res = await api.patch<NewsPost>(`/admin/news/${id}`, form);
     return res.data;
   }
 

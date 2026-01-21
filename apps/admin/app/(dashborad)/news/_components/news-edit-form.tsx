@@ -90,7 +90,6 @@ export default function NewsEditForm({ newsId }: { newsId: string }) {
       <NewsForm
         defaultValues={{
           title: data.title,
-          slug: data.slug,
           excerpt: data.excerpt,
           content: data.content,
           publishedAt: data.publishedAt,
